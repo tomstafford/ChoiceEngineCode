@@ -1,3 +1,6 @@
+require_relative 'link'
+require_relative 'post'
+
 module ChoiceEngine
   class Responder
 

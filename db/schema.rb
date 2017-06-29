@@ -16,14 +16,14 @@ ActiveRecord::Schema.define(version: 20170629162143) do
   enable_extension "plpgsql"
 
   create_table "links", force: :cascade do |t|
-    t.bigint "posts_id"
+    t.bigint "post_id"
     t.integer "outgoing_post_id"
     t.text "abbreviation"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["abbreviation"], name: "index_links_on_abbreviation"
     t.index ["outgoing_post_id"], name: "index_links_on_outgoing_post_id"
-    t.index ["posts_id"], name: "index_links_on_posts_id"
+    t.index ["post_id"], name: "index_links_on_post_id"
   end
 
   create_table "posts", force: :cascade do |t|

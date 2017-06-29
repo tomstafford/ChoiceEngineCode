@@ -36,6 +36,25 @@ module ChoiceEngine
       end
     end
 
+    def import_links
+
+      links.each(post_title: 'PostTitle', abbreviation: 'LinkAbbreviation', outgoing_post_title: 'LinkDestination') do |hash|
+        unless hash[:post_title] == 'PostTitle'
+          post = Post.find_by(title: hash[:post_title])
+          if post
+            outgoing_post = Post.find_by(title: hash[:outgoing_post_title])
+            if outgoing_post
+              Link.create(post_id: post.id, abbreviation: hash[:abbreviation], outgoing_post_id: outgoing_post.id)
+            else
+              p "cannot find outgoing post id for #{hash[:outgoing_post_title]}"
+            end
+          else
+            p "cannot find post id for #{hash[:post_title]}"
+          end
+        end
+      end
+    end
+
     def sheets
       @sheets
     end

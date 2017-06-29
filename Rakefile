@@ -37,6 +37,7 @@ namespace :db do
     ChoiceEngine::SpreadsheetProcessor.reset
     sp.parse
     sp.import_posts
+    sp.import_links
   end
 
   desc "Create the database"
@@ -89,14 +90,9 @@ namespace :g do
 
     File.open(path, 'w') do |file|
       file.write <<-EOF
-class #{migration_class} < ActiveRecord::Migration
-
-  def self.up
+class #{migration_class} < ActiveRecord::Migration[5.1]
+  def change
   end
-
-  def self.down
-  end
-
 end
       EOF
     end
