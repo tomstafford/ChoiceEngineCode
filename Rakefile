@@ -36,6 +36,10 @@ namespace :db do
     puts "Database created."
   end
 
+  task :annotate do
+    annotate
+  end
+
   desc "Migrate the database"
   task :migrate do
     ActiveRecord::Base.establish_connection(db_config)
