@@ -82,6 +82,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord
+  activesupport
   annotate
   awesome_print
   bundler-audit

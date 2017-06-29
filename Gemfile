@@ -4,6 +4,7 @@ ruby '2.4.1'
 
 gem 'chatterbot'
 gem 'activerecord'
+gem 'activesupport'
 gem 'rake'
 gem 'pg'
 gem 'awesome_print'
