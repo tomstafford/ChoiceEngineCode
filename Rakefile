@@ -3,6 +3,7 @@ require 'active_record'
 require 'active_support'
 require 'dotenv'
 require 'yaml'
+require_relative 'lib/choice_engine/spreadsheet_processor.rb'
 
 Dotenv.load
 
@@ -28,6 +29,15 @@ end
 namespace :db do
 
   db_config
+
+  desc "Import"
+  task :import do
+    ActiveRecord::Base.establish_connection(db_config)
+    sp = ChoiceEngine::SpreadsheetProcessor.new
+    ChoiceEngine::SpreadsheetProcessor.reset
+    sp.parse
+    sp.import_posts
+  end
 
   desc "Create the database"
   task :create do

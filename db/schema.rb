@@ -10,35 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170629162510) do
+ActiveRecord::Schema.define(version: 20170629162143) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "extensions", force: :cascade do |t|
-    t.text "abbreviation"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["abbreviation"], name: "index_extensions_on_abbreviation"
-  end
-
   create_table "links", force: :cascade do |t|
     t.bigint "posts_id"
     t.integer "outgoing_post_id"
-    t.bigint "extension_id"
+    t.text "abbreviation"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["extension_id"], name: "index_links_on_extension_id"
+    t.index ["abbreviation"], name: "index_links_on_abbreviation"
     t.index ["outgoing_post_id"], name: "index_links_on_outgoing_post_id"
     t.index ["posts_id"], name: "index_links_on_posts_id"
   end
 
   create_table "posts", force: :cascade do |t|
     t.text "title"
+    t.text "description"
     t.text "url"
     t.boolean "start"
     t.boolean "end"
-    t.integer "type"
+    t.integer "importance"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
