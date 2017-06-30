@@ -1,0 +1,11 @@
+require_relative 'lib/choice_engine/responder.rb'
+require_relative 'lib/database_config.rb'
+require_relative 'lib/choice_engine/link.rb'
+require_relative 'lib/choice_engine/post.rb'
+include ChoiceEngine
+
+DatabaseConfig.make_normal_connection
+
+ChoiceEngine::Responder.new('START').respond
+
+

@@ -6,7 +6,7 @@ require 'chatterbot/dsl'
 # Enabling **debug_mode** prevents the bot from actually sending
 # tweets. Keep this active while you are developing your bot. Once you
 # are ready to send out tweets, you can remove this line.
-#debug_mode
+debug_mode
 
 # Chatterbot will keep track of the most recent tweets your bot has
 # handled so you don't need to worry about that yourself. While

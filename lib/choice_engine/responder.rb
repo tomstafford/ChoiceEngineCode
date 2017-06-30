@@ -28,15 +28,15 @@ module ChoiceEngine
     end
 
     def next_options(current_post)
-      current_post.links.pluck(:abbreviation)
+      current_post.links.pluck(:abbreviation).join(',')
     end
 
     def find_next_step_random(abbreviation, current_post_id = nil)
-      Post.links.where("abbreviation LIKE ?", "%#{abbreviation}%").sample
+      Link.where("abbreviation LIKE ?", "%#{abbreviation}%").sample.outgoing_post
     end
 
     def find_next_step_actual(abbreviation, current_post_id)
-      Post.links.find_by("abbreviation LIKE ? AND post_id = ?", "%#{abbreviation}%", current_post_id)
+      Link.find_by("abbreviation LIKE ? AND post_id = ?", "%#{abbreviation}%", current_post_id).outgoing_post
     end
   end
 end
