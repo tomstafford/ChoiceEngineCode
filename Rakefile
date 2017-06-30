@@ -1,11 +1,13 @@
 require 'rake/task'
 require 'active_record'
-require 'active_support'
-require 'dotenv'
-require 'yaml'
+#require 'active_support'
+#require 'dotenv'
+#require 'yaml'
 require_relative 'lib/choice_engine/spreadsheet_processor.rb'
 
-Dotenv.load
+#Dotenv.load
+
+require_relative 'lib/database_config.rb'
 
 task default: %w[run]
 
@@ -13,26 +15,26 @@ task :run do
   bundle exec ruby "lib/choice_engine.rb"
 end
 
-def db_config
-  environment = ENV.fetch("ENVIRONMENT", "development")
-  config =  YAML::load(File.open('config/database.yml'))
-  config['pool'] = ENV['DB_POOL'] || ENV['RAILS_MAX_THREADS'] || 5
-  config['url'] = ENV['DATABASE_URL'] if ENV['DATABASE_URL']
-  config[environment]
-end
+# def db_config
+#   environment = ENV.fetch("ENVIRONMENT", "development")
+#   config =  YAML::load(File.open('config/database.yml'))
+#   config['pool'] = ENV['DB_POOL'] || ENV['RAILS_MAX_THREADS'] || 5
+#   config['url'] = ENV['DATABASE_URL'] if ENV['DATABASE_URL']
+#   config[environment]
+# end
 
-def db_config_admin
-  p db_config
-  db_config.merge({'database' => 'postgres', 'schema_search_path' => 'public'})
-end
+# def db_config_admin
+#   p db_config
+#   db_config.merge({'database' => 'postgres', 'schema_search_path' => 'public'})
+# end
 
 namespace :db do
 
-  db_config
+  #db_config
 
   desc "Import"
   task :import do
-    ActiveRecord::Base.establish_connection(db_config)
+    DatabaseConfig.make_normal_connection
     sp = ChoiceEngine::SpreadsheetProcessor.new
     ChoiceEngine::SpreadsheetProcessor.reset
     sp.parse
@@ -42,8 +44,7 @@ namespace :db do
 
   desc "Create the database"
   task :create do
-    ActiveRecord::Base.establish_connection(db_config_admin)
-    ActiveRecord::Base.connection.create_database(db_config["database"])
+    DatabaseConfig.create_database
     puts "Database created."
   end
 
@@ -53,7 +54,7 @@ namespace :db do
 
   desc "Migrate the database"
   task :migrate do
-    ActiveRecord::Base.establish_connection(db_config)
+    DatabaseConfig.make_normal_connection
     ActiveRecord::Migrator.migrate("db/migrate/")
     Rake::Task["db:schema"].invoke
     puts "Database migrated."
@@ -61,8 +62,7 @@ namespace :db do
 
   desc "Drop the database"
   task :drop do
-    ActiveRecord::Base.establish_connection(db_config_admin)
-    ActiveRecord::Base.connection.drop_database(db_config["database"])
+    DatabaseConfig.drop_database
     puts "Database deleted."
   end
 
