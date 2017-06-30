@@ -3,6 +3,7 @@ require 'rubygems'
 require 'dotenv'
 require 'awesome_print'
 require_relative 'choice_engine/responder.rb'
+require_relative 'database_config.rb'
 
 Dotenv.load('../.env')
 
@@ -13,7 +14,8 @@ require_relative 'chatterbox_config'
 #
 replies do |tweet|
   text = extract_actual_message(tweet.text)
-  response = ChoiceEngine::Responder.new(text).respond
+
+  response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).respond
   reply "#USER# #{response}", tweet
 end
 
