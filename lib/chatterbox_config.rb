@@ -14,7 +14,7 @@ require 'chatterbot/dsl'
 # chatterbot from updating those values. This directive can also be
 # handy if you are doing something advanced where you want to track
 # which tweet you saw last on your own.
-#no_update if ENV.key?('NO_UPDATE')
+no_update if ENV.key?('NO_UPDATE')
 
 # remove this to get less output when running your bot
 verbose
@@ -40,4 +40,4 @@ exclude bad_words
 # case, do not use this line. Every time you run your bot, it will
 # execute once, and then exit.
 #
-#use_streaming if ENV.key?('USE_STREAMING')
+use_streaming if ENV.key?('USE_STREAMING')
