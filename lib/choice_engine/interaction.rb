@@ -6,7 +6,7 @@ module ChoiceEngine
 
     def self.latest_post_for(username)
       latest_posts = where(username: username).order(created_at: :desc).limit(1)
-      latest_posts.first.post if latest_posts
+      latest_posts.first.post if latest_posts.any?
     end
   end
 end
