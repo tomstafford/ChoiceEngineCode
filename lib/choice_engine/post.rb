@@ -5,5 +5,9 @@ module ChoiceEngine
     has_many :links
 
     enum importance: [ :high, :medium, :low ]
+
+    def next_options
+      links.pluck(:abbreviation).join(', ')
+    end
   end
 end
