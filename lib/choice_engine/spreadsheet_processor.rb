@@ -7,7 +7,7 @@ module ChoiceEngine
 
     attr_accessor :spreadsheet, :sheets
 
-    SPREADSHEET_NAME = '/Users/james/Dropbox/ChoiceEngineBackroom/ChoiceEngineGraph.xlsx'
+    SPREADSHEET_NAME = ENV['SPREADSHEET_PATH_NAME'] || '/Users/james/Dropbox/ChoiceEngineBackroom/ChoiceEngineGraph.xlsx'
     SHEETS = ['Posts', 'Links']
 
     def initialize(spreadsheet = SPREADSHEET_NAME)
