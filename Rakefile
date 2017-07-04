@@ -12,7 +12,7 @@ require_relative 'lib/database_config.rb'
 task default: %w[run]
 
 task :run do
-  bundle exec ruby "lib/choice_engine.rb"
+  ruby "lib/choice_engine.rb"
 end
 
 # def db_config

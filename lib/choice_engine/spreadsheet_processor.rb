@@ -43,7 +43,7 @@ module ChoiceEngine
           post = Post.find_by(title: hash[:post_title])
           if post
             p "Found post for #{hash[:post_title]}"
-            outgoing_post = Post.find_by(title: hash[:outgoing_post_title])
+            outgoing_post = Post.find_by(url: hash[:outgoing_post_title])
             if outgoing_post
               p "Found outgoing_post for #{hash[:outgoing_post_title]}"
               Link.create(post_id: post.id, abbreviation: hash[:abbreviation], outgoing_post_id: outgoing_post.id)

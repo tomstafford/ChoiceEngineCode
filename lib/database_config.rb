@@ -9,9 +9,13 @@ class DatabaseConfig
 
   def self.db_config
     environment = ENV.fetch("ENVIRONMENT", "development")
-    config =  YAML::load(File.open('config/database.yml'))
+
     config['pool'] = ENV['DB_POOL'] || ENV['RAILS_MAX_THREADS'] || 5
-    config['url'] = ENV['DATABASE_URL'] if ENV['DATABASE_URL']
+    if ENV['DATABASE_URL']
+      config['url'] = ENV['DATABASE_URL'] if ENV['DATABASE_URL']
+    else
+      config =  YAML::load(File.open('config/database.yml'))
+    end
     config[environment]
   end
 
