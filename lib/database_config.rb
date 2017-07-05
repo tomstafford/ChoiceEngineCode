@@ -2,6 +2,7 @@ require 'active_record'
 require 'active_support'
 require 'dotenv'
 require 'yaml'
+require 'textacular'
 
 Dotenv.load
 
@@ -26,6 +27,7 @@ class DatabaseConfig
   end
 
   def self.make_normal_connection
+    ActiveRecord::Base.extend(Textacular)
     ActiveRecord::Base.establish_connection(db_config)
   end
 

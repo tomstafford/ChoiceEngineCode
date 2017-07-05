@@ -13,5 +13,5 @@ gem 'annotate'
 gem 'railroady'
 gem 'bundler-audit', require: false
 gem 'roo'
-
+gem 'textacular'
 
