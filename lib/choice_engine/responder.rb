@@ -14,14 +14,20 @@ module ChoiceEngine
 
     def respond
       DatabaseConfig.make_normal_connection
-      new_post = get_post_for_message
 
-      if new_post
-        Interaction.create(username: @username, post_id: new_post.id)
-        "#{new_post.description} #{new_post.next_options} #{content_url(new_post)}"
+      if @message.include?('RESET')
+        p "Reset and clear ready to start again"
+        Interaction.where(username: @username).delete_all
       else
-        p "Bot didn't understand the message '#{@message}'"
-        "I didn't understand your message or where you are from: '#{@message}'"
+        new_post = get_post_for_message
+
+        if new_post
+          Interaction.create(username: @username, post_id: new_post.id)
+          "#{new_post.description} #{new_post.next_options} #{content_url(new_post)}"
+        else
+          p "Bot didn't understand the message '#{@message}'"
+          "I didn't understand your message or where you are from: '#{@message}'"
+        end
       end
     end
 
