@@ -44,9 +44,9 @@ module ChoiceEngine
     end
 
     def find_next_step_for(abbreviation, current_post_id)
-      link = Link.find_by("abbreviation LIKE ? AND post_id = ?", "%#{abbreviation}%", current_post_id)
+      link = Link.fuzzy_search(abbreviation: abbreviation).where(post_id: current_post_id)
       return unless link
-      link.outgoing_post
+      link.first.outgoing_post
     end
   end
 end
