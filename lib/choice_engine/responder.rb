@@ -51,7 +51,7 @@ module ChoiceEngine
 
     def find_next_step_for(abbreviation, current_post_id)
       link = Link.fuzzy_search(abbreviation: abbreviation).where(post_id: current_post_id)
-      return unless link
+      return unless link.any?
       link.first.outgoing_post
     end
   end
