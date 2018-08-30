@@ -22,6 +22,7 @@ module ChoiceEngine
         new_post = get_post_for_message
 
         if new_post
+          p "New post received, create interaction"
           Interaction.create(username: @username, post_id: new_post.id)
           "#{new_post.description} #{new_post.next_options} #{content_url(new_post)}"
         else
@@ -43,7 +44,7 @@ module ChoiceEngine
       else
         last_post_for_user = Interaction.latest_post_for(@username)
         if last_post_for_user
-          p 'We have last post for user, so find the next one'
+          p "We have last post for user #{@username}, so find the next step"
           find_next_step_for(@message, last_post_for_user.id)
         end
       end

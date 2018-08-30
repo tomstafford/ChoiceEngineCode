@@ -93,6 +93,4 @@ config/gemnasium.yml
 =======
 spec/examples.txt
 
-# Certs
-deepsearch.uk*
-test.deepsearch.uk*
+lib/choice_engine.yml
