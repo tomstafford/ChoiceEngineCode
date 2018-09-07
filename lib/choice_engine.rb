@@ -11,7 +11,11 @@ Dotenv.load('../.env')
 
 require_relative 'chatterbox_config'
 
-
+uptime_messages = [ 'We are what we pretend to be, so we must be careful about what we pretend to be - Kurt Vonnegut',
+  'Two roads diverged in a wood, and I - I took the one less traveled by, And that has made all the difference - Robert Frost',
+  'Never open the door to a lesser evil, for other and greater ones invariably slink in after it - Baltasar Gracian',
+  'Face your life, its pain, its pleasure, leave no path untaken - Neil Gaiman'
+]
 
 
 #<Twitter::SearchResults:0x00007fb09eacd338
@@ -74,3 +78,9 @@ replies do |tweet|
   response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).respond
   reply "#USER# #{response}", tweet
 end
+
+if [true, false].sample
+  message = uptime_messages.sample + " (#{Time.now.utc.to_s})"
+  tweet message
+end
+
