@@ -24,7 +24,7 @@ module ChoiceEngine
         if new_post
           p "New post received, create interaction"
           Interaction.create(username: @username, post_id: new_post.id)
-          "#{new_post.description} #{new_post.next_options} #{content_url(new_post)}"
+          "#{new_post.description} #{content_url(new_post)} options are: #{new_post.next_options}"
         else
           p "Bot didn't understand the message '#{@message}'"
           "I didn't understand your message or where you are from: '#{@message}'"
