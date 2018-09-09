@@ -66,21 +66,24 @@ module Chatterbot
   end
 end
 
-DatabaseConfig.make_normal_connection
+test_value = [1,2,3,4].sample
 
-# Update last since check
-last_id = client.search("a", since:Time.now - 100).attrs[:search_metadata][:max_id]
-ChoiceEngine::LastId.first.update(last_twitter_id: last_id)
+if test_value == 1
+  DatabaseConfig.make_normal_connection
 
-#
-replies do |tweet|
-  text = ChoiceEngine::Utils.remove_username_from_text(tweet.text)
-  response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).respond
-  reply "#USER# #{response}", tweet
-end
+  # Update last since check
+  last_id = client.search("a", since:Time.now - 100).attrs[:search_metadata][:max_id]
+  ChoiceEngine::LastId.first.update(last_twitter_id: last_id)
 
-if [true, false].sample
+  #
+  replies do |tweet|
+    text = ChoiceEngine::Utils.remove_username_from_text(tweet.text)
+    response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).respond
+    reply "#USER# #{response}", tweet
+  end
+else
   message = uptime_messages.sample + " (#{Time.now.utc.to_s})"
   tweet message
 end
+
 
