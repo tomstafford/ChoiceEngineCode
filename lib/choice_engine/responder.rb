@@ -26,8 +26,15 @@ module ChoiceEngine
           Interaction.create(username: @username, post_id: new_post.id)
           "#{new_post.description} #{content_url(new_post)} options are: #{new_post.next_options}"
         else
-          p "Bot didn't understand the message '#{@message}'"
-          "I didn't understand your message or where you are from: '#{@message}'"
+          last_post_for_user = Interaction.latest_post_for(@username)
+          if last_post_for_user
+            p "We have last post for user #{@username}, so repeat options"
+            options = last_post_for_user.next_options
+            "I didn't understand your message, options are: #{options}"
+          else
+            p "Bot didn't understand the message '#{@message}'"
+            "I didn't understand your message or where you are from: '#{@message}'"
+          end
         end
       end
     end

@@ -66,7 +66,7 @@ module Chatterbot
   end
 end
 
-test_value = [1,2,3,4].sample
+test_value = [1,2,3].sample
 
 if test_value == 1
   DatabaseConfig.make_normal_connection
