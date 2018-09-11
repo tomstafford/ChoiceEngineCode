@@ -18,23 +18,23 @@ module ChoiceEngine
       if @message.include?('RESET')
         p "Reset and clear ready to start again"
         Interaction.where(username: @username).delete_all
-      else
-        new_post = get_post_for_message
+      end
 
-        if new_post
-          p "New post received, create interaction"
-          Interaction.create(username: @username, post_id: new_post.id)
-          "#{new_post.description} #{content_url(new_post)} options are: #{new_post.next_options}"
+      new_post = get_post_for_message
+
+      if new_post
+        p "New post received, create interaction"
+        Interaction.create(username: @username, post_id: new_post.id)
+        "#{new_post.description} #{content_url(new_post)} options are: #{new_post.next_options}"
+      else
+        last_post_for_user = Interaction.latest_post_for(@username)
+        if last_post_for_user
+          p "We have last post for user #{@username}, so repeat options"
+          options = last_post_for_user.next_options
+          "I didn't understand your message, options are: #{options} - or reply with RESET to start again."
         else
-          last_post_for_user = Interaction.latest_post_for(@username)
-          if last_post_for_user
-            p "We have last post for user #{@username}, so repeat options"
-            options = last_post_for_user.next_options
-            "I didn't understand your message, options are: #{options} - or reply with RESET to start again."
-          else
-            p "Bot didn't understand the message '#{@message}'"
-            "I didn't understand your message: '#{@message}' reply with RESET to start again."
-          end
+          p "Bot didn't understand the message '#{@message}'"
+          "I didn't understand your message: '#{@message}' reply with RESET to start again."
         end
       end
     end
@@ -46,7 +46,7 @@ module ChoiceEngine
     end
 
     def get_post_for_message
-      if @message.include?('START')
+      if @message.include?('START') || @message.include?('RESET')
         Post.where(start: true).sample
       else
         last_post_for_user = Interaction.latest_post_for(@username)
