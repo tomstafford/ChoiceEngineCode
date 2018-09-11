@@ -38,29 +38,29 @@ module Chatterbot
     def replies(&block)
       return unless require_login
 
-       DatabaseConfig.make_normal_connection
+      DatabaseConfig.make_normal_connection
 
-      last_id = ChoiceEngine::LastId.first.last_twitter_id
       last_reply_id = ChoiceEngine::LastId.first.last_reply_id
 
-      debug "check for replies since this twitter id - last reply id #{last_reply_id} and last id #{last_id}"
-
+      debug "check for replies since this twitter id - last reply id #{last_reply_id}"
 
       opts = {}
-      if last_reply_id > 0
-        opts[:since_id] = last_reply_id
-      elsif last_id > 0
-        opts[:since_id] = last_id
-      end
+      opts[:since_id] = last_reply_id
       opts[:count] = 200
 
       results = client.mentions_timeline(opts)
       @current_tweet = nil
+
+      max_reply_id = last_reply_id
+
       results.each { |s|
-        ChoiceEngine::LastId.first.update(last_reply_id: s.id)
+        if s.id > max_reply_id
+          max_reply_id = s.id
+        end
         @current_tweet = s
         yield s
       }
+      ChoiceEngine::LastId.first.update(last_reply_id: max_reply_id)
       @current_tweet = nil
     end
   end

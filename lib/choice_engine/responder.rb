@@ -30,10 +30,10 @@ module ChoiceEngine
           if last_post_for_user
             p "We have last post for user #{@username}, so repeat options"
             options = last_post_for_user.next_options
-            "I didn't understand your message, options are: #{options}"
+            "I didn't understand your message, options are: #{options} - or reply with RESET to start again."
           else
             p "Bot didn't understand the message '#{@message}'"
-            "I didn't understand your message or where you are from: '#{@message}'"
+            "I didn't understand your message: '#{@message}' reply with RESET to start again."
           end
         end
       end
