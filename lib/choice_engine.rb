@@ -11,7 +11,14 @@ Dotenv.load('../.env')
 
 require_relative 'chatterbox_config'
 
-uptime_messages = [ 'We are what we pretend to be, so we must be careful about what we pretend to be - Kurt Vonnegut',
+uptime_messages = [
+  'The Choice Engine is an interactive essay about the psychology, neuroscience and philosophy of free will. To begin, reply START',
+  'The Choice Engine is brought to you by: @tomstafford - Words; @J_o_n_C_a_n - Design; @jamesjefferies - Code; A @FestivalMind project',
+  "I don't respond to replies immediately, but I will get to yours soon. Promise.",
+  "There's a chance to ask questions and share your experiences of the project at a panel discussion in the Spiegaltent, Barkers Pool at 4pm on the 25th of September http://festivalofthemind.group.shef.ac.uk/the-choice-engine-talk/ ",
+  "The panel discussion for this project will feature @HelenaIfill, who will give us a Victorian perspective on choice and the mind",
+  "Apologies for any unchosen messages you receive ... reply  with RESET to clear your history and then reply with START to start again if you are having problems",
+  'We are what we pretend to be, so we must be careful about what we pretend to be - Kurt Vonnegut',
   'Two roads diverged in a wood, and I - I took the one less traveled by, And that has made all the difference - Robert Frost',
   'Never open the door to a lesser evil, for other and greater ones invariably slink in after it - Baltasar Gracian',
   'Face your life, its pain, its pleasure, leave no path untaken - Neil Gaiman'
