@@ -12,16 +12,14 @@ Dotenv.load('../.env')
 require_relative 'chatterbox_config'
 
 uptime_messages = [
-  'The Choice Engine is an interactive essay about the psychology, neuroscience and philosophy of free will. To begin, reply START',
-  'The Choice Engine is brought to you by: @tomstafford - Words; @J_o_n_C_a_n - Design; @jamesjefferies - Code; A @FestivalMind project',
-  "I don't respond to replies immediately, but I will get to yours soon. Promise.",
-  "There's a chance to ask questions and share your experiences of the project at a panel discussion in the Spiegaltent, Barkers Pool at 4pm on the 25th of September http://festivalofthemind.group.shef.ac.uk/the-choice-engine-talk/ ",
-  "The panel discussion for this project will feature @HelenaIfill, who will give us a Victorian perspective on choice and the mind",
-  "Apologies for any unchosen messages you receive ... reply  with RESET to clear your history and then reply with START to start again if you are having problems",
-  'We are what we pretend to be, so we must be careful about what we pretend to be - Kurt Vonnegut',
-  'Two roads diverged in a wood, and I - I took the one less traveled by, And that has made all the difference - Robert Frost',
-  'Never open the door to a lesser evil, for other and greater ones invariably slink in after it - Baltasar Gracian',
-  'Face your life, its pain, its pleasure, leave no path untaken - Neil Gaiman'
+"The Choice Engine is an interactive essay about the psychology, neuroscience and philosophy of free will. Follow and reply START to begin.",
+"The Choice Engine is brought to you by: @tomstafford - Words; @J_o_n_C_a_n - Design; @jamesjefferies - Code; A @FestivalMind project.",
+"I don't respond to replies immediately. Sometimes it can take a few hours, but I will get to yours soon. Make sure you are following to ensure you see replies.",
+"There's a chance to ask questions and share your experiences of the project at a panel discussion in the Spiegaltent, Barkers Pool #Sheffield at 4pm on the 25th of September http://festivalofthemind.group.shef.ac.uk/the-choice-engine-talk/",
+"The panel discussion for this project will feature @HelenaIfill, who will give us a Victorian perspective on choice and the mind, and @J_o_n_C_a_n who will take about how a designer thinks about people's choices.",
+"Reply with RESET to clear your history then reply with START to start again.",
+"Twitter sometimes hides my replies. Please follow me to ensure you see replies to your messages (if you have 'quality filter' ticked in Settings > Notifications you may not be notified of my replies). More on this here https://tomstafford.github.io/choice-engine-text/teething.",
+"Make sure you are following to ensure you see replies."
 ]
 
 
@@ -73,7 +71,7 @@ module Chatterbot
   end
 end
 
-test_value = [1,2,3].sample
+test_value = [1,2,3,4].sample
 
 if test_value == 1
   DatabaseConfig.make_normal_connection
@@ -82,13 +80,12 @@ if test_value == 1
   last_id = client.search("a", since:Time.now - 100).attrs[:search_metadata][:max_id]
   ChoiceEngine::LastId.first.update(last_twitter_id: last_id)
 
-  #
   replies do |tweet|
     text = ChoiceEngine::Utils.remove_username_from_text(tweet.text)
     response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).respond
     reply "#USER# #{response}", tweet
   end
-else
+elsif test_value == 2
   message = uptime_messages.sample + " (#{Time.now.utc.to_s})"
   tweet message
 end
