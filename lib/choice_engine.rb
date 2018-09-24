@@ -81,11 +81,15 @@ if test_value == 1
   ChoiceEngine::LastId.first.update(last_twitter_id: last_id)
 
   replies do |tweet|
-    text = ChoiceEngine::Utils.remove_username_from_text(tweet.text)
-    response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).respond
-    reply "#USER# #{response}", tweet
+    if tweet.user.screen_name == 'ChoiceEngine'
+      p "Don't reply to yourself: #{tweet.text}"
+    else
+      text = ChoiceEngine::Utils.remove_username_from_text(tweet.text)
+      response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).respond
+      reply "#USER# @#{tweet.user.screen_name} #{response}", tweet
+    end
   end
-elsif test_value == 2
+elsif test_value == 6
   message = uptime_messages.sample + " (#{Time.now.utc.to_s})"
   tweet message
 end
