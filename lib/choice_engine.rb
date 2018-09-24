@@ -89,7 +89,7 @@ if test_value == 1
       reply "#USER# @#{tweet.user.screen_name} #{response}", tweet
     end
   end
-elsif test_value == 6
+elsif test_value == 2
   message = uptime_messages.sample + " (#{Time.now.utc.to_s})"
   tweet message
 end
