@@ -46,7 +46,7 @@ module ChoiceEngine
     end
 
     def get_post_for_message
-      if @message.include?('START') || @message.include?('RESET')
+      if @message.upcase.include?('START') || @message.upcase.include?('RESET')
         Post.where(start: true).sample
       else
         last_post_for_user = Interaction.latest_post_for(@username)

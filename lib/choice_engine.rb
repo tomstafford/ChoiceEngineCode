@@ -15,13 +15,10 @@ uptime_messages = [
 "The Choice Engine is an interactive essay about the psychology, neuroscience and philosophy of free will. Follow and reply START to begin.",
 "The Choice Engine is brought to you by: @tomstafford - Words; @J_o_n_C_a_n - Design; @jamesjefferies - Code; A @FestivalMind project.",
 "I don't respond to replies immediately. Sometimes it can take a few hours, but I will get to yours soon. Make sure you are following to ensure you see replies.",
-"There's a chance to ask questions and share your experiences of the project at a panel discussion in the Spiegaltent, Barkers Pool #Sheffield at 4pm on the 25th of September http://festivalofthemind.group.shef.ac.uk/the-choice-engine-talk/",
-"The panel discussion for this project will feature @HelenaIfill, who will give us a Victorian perspective on choice and the mind, and @J_o_n_C_a_n who will take about how a designer thinks about people's choices.",
-"Reply with RESET to clear your history then reply with START to start again.",
+"Reply with RESET to clear your history.",
 "Twitter sometimes hides my replies. Please follow me to ensure you see replies to your messages (if you have 'quality filter' ticked in Settings > Notifications you may not be notified of my replies). More on this here https://tomstafford.github.io/choice-engine-text/teething.",
 "Make sure you are following to ensure you see replies."
 ]
-
 
 #<Twitter::SearchResults:0x00007fb09eacd338
  # @attrs=
