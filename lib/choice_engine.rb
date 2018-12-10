@@ -44,16 +44,18 @@ module Chatterbot
 
       last_reply_id = ChoiceEngine::LastId.first.last_reply_id
 
+      pp ChoiceEngine::LastId.all
+
       debug "check for replies since this twitter id - last reply id #{last_reply_id}"
 
       opts = {}
-      opts[:since_id] = last_reply_id
+      opts[:since_id] = last_reply_id unless last_reply_id.nil?
       opts[:count] = 200
 
       results = client.mentions_timeline(opts)
       @current_tweet = nil
 
-      max_reply_id = last_reply_id
+      max_reply_id = last_reply_id || 1071498426544766977
 
       results.each { |s|
         if s.id > max_reply_id
@@ -68,27 +70,42 @@ module Chatterbot
   end
 end
 
-test_value = [1,2,3,4].sample
+module ChoiceEngine
+  class Runner
 
-if test_value == 1
-  DatabaseConfig.make_normal_connection
+    def self.run
+      #test_value = [1,2,3,4].sample
+      test_value = 1
+      if test_value == 1
+        DatabaseConfig.make_normal_connection
 
-  # Update last since check
-  last_id = client.search("a", since:Time.now - 100).attrs[:search_metadata][:max_id]
-  ChoiceEngine::LastId.first.update(last_twitter_id: last_id)
+        # Update last since check
+        last_id = client.search("a", since:Time.now - 100).attrs[:search_metadata][:max_id]
+        ChoiceEngine::Utils::update_last_id(last_id)
 
-  replies do |tweet|
-    if tweet.user.screen_name == 'ChoiceEngine'
-      p "Don't reply to yourself: #{tweet.text}"
-    else
-      text = ChoiceEngine::Utils.remove_username_from_text(tweet.text)
-      response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).respond
-      reply "#USER# @#{tweet.user.screen_name} #{response}", tweet
+        replies do |tweet|
+          if tweet.user.screen_name == 'ChoiceEngine'
+            p "Don't reply to yourself: #{tweet.text}"
+          else
+            # We need to check this tweet still exists
+            pp tweet.id
+            # We should follow if we don't already
+            pp tweet.user.id
+            ChoiceEngine::Utils.follow_if_we_do_not(tweet.user.id)
+            text = ChoiceEngine::Utils.remove_username_from_text(tweet.text)
+            response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).respond
+            reply "#USER# @#{tweet.user.screen_name} #{response}", tweet
+
+
+          end
+        end
+      elsif test_value == 2
+        message = uptime_messages.sample + " (#{Time.now.utc.to_s})"
+        tweet message
+      end
     end
   end
-elsif test_value == 2
-  message = uptime_messages.sample + " (#{Time.now.utc.to_s})"
-  tweet message
 end
 
+ChoiceEngine::Runner.run
 

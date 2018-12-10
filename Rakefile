@@ -2,12 +2,17 @@ require 'rake/task'
 require 'active_record'
 require_relative 'lib/choice_engine/spreadsheet_processor.rb'
 require_relative 'lib/database_config.rb'
+require_relative 'lib/choice_engine.rb'
 
 task default: %w[run]
 
-task :run do
-  ruby "lib/choice_engine.rb"
-end
+  task :run do
+
+  ChoiceEngine::Runner.run
+
+
+   # ruby "lib/choice_engine.rb"
+  end
 
 namespace :db do
 
