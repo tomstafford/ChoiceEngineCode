@@ -1,15 +1,17 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'dotenv'
-require 'awesome_print'
+
 require_relative 'choice_engine/responder.rb'
 require_relative 'choice_engine/last_id.rb'
 require_relative 'choice_engine/utils.rb'
 require_relative 'database_config.rb'
 
+
 Dotenv.load('../.env')
 
 require_relative 'chatterbox_config'
+require_relative 'chatterbox/reply.rb'
 
 uptime_messages = [
 "The Choice Engine is an interactive essay about the psychology, neuroscience and philosophy of free will. Follow and reply START to begin.",
@@ -28,55 +30,13 @@ uptime_messages = [
  #     :max_id=>1035261852706643968,
 #
 
-# MONKEY PATCH
-# this block responds to mentions of your bot
-module Chatterbot
-
-  #
-  # handle checking for mentions of the bot
-  module Reply
-
-    # handle replies for the bot
-    def replies(&block)
-      return unless require_login
-
-      DatabaseConfig.make_normal_connection
-
-      last_reply_id = ChoiceEngine::LastId.first.last_reply_id
-
-      pp ChoiceEngine::LastId.all
-
-      debug "check for replies since this twitter id - last reply id #{last_reply_id}"
-
-      opts = {}
-      opts[:since_id] = last_reply_id unless last_reply_id.nil?
-      opts[:count] = 200
-
-      results = client.mentions_timeline(opts)
-      @current_tweet = nil
-
-      max_reply_id = last_reply_id || 1071498426544766977
-
-      results.each { |s|
-        if s.id > max_reply_id
-          max_reply_id = s.id
-        end
-        @current_tweet = s
-        yield s
-      }
-      ChoiceEngine::LastId.first.update(last_reply_id: max_reply_id)
-      @current_tweet = nil
-    end
-  end
-end
-
 module ChoiceEngine
   class Runner
 
     def self.run
-      #test_value = [1,2,3,4].sample
-      test_value = 1
-      if test_value == 1
+      test_value = [:reply, :tweet, :wait, :wait_again].sample
+      test_value = :reply
+      if test_value == :reply
         DatabaseConfig.make_normal_connection
 
         # Update last since check
@@ -84,28 +44,26 @@ module ChoiceEngine
         ChoiceEngine::Utils::update_last_id(last_id)
 
         replies do |tweet|
-          if tweet.user.screen_name == 'ChoiceEngine'
+          if tweet.user.screen_name == ENV['TWITTER_USER_NAME']
             p "Don't reply to yourself: #{tweet.text}"
           else
             # We need to check this tweet still exists
-            pp tweet.id
             # We should follow if we don't already
-            pp tweet.user.id
+            pp "We have received Tweet id #{tweet.id} from this user id: #{tweet.user.id}"
+            pp tweet.user
+
             ChoiceEngine::Utils.follow_if_we_do_not(tweet.user.id)
+
             text = ChoiceEngine::Utils.remove_username_from_text(tweet.text)
             response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).respond
-            reply "#USER# @#{tweet.user.screen_name} #{response}", tweet
-
-
+            client.update("@#{tweet.user.screen_name} #{response}", in_reply_to_status_id: tweet.id)
+           # reply "#USER# #{response}", tweet
           end
         end
-      elsif test_value == 2
+      elsif test_value == :tweet
         message = uptime_messages.sample + " (#{Time.now.utc.to_s})"
         tweet message
       end
     end
   end
 end
-
-ChoiceEngine::Runner.run
-

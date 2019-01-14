@@ -25,7 +25,9 @@ module ChoiceEngine
       if new_post
         p "New post received, create interaction"
         Interaction.create(username: @username, post_id: new_post.id)
-        "#{new_post.description} #{content_url(new_post)} options are: #{new_post.next_options}"
+        output = "#{new_post.description} #{content_url(new_post)} options are: #{new_post.next_options}"
+        pp output
+        output
       else
         last_post_for_user = Interaction.latest_post_for(@username)
         if last_post_for_user

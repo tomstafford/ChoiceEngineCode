@@ -7,11 +7,7 @@ require_relative 'lib/choice_engine.rb'
 task default: %w[run]
 
   task :run do
-
-  ChoiceEngine::Runner.run
-
-
-   # ruby "lib/choice_engine.rb"
+    ChoiceEngine::Runner.run
   end
 
 namespace :db do
