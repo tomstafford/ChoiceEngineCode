@@ -70,7 +70,7 @@ module ChoiceEngine
       client.update("@#{tweet.user.screen_name} #{response}", in_reply_to_status_id: tweet.id)
       p 'Reply to tweet'
       p '#' * 80
-      pp
+      p ' ' * 80
     end
 
     def self.tweet_action
