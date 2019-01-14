@@ -1,5 +1,4 @@
 class CreateLastId < ActiveRecord::Migration[5.1]
-
   def change
     create_table :last_ids do |t|
       t.bigint     :last_twitter_id

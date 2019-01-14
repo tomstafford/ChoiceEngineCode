@@ -1,5 +1,3 @@
-#!/usr/bin/env ruby
-
 require 'rubygems'
 require 'chatterbot/dsl'
 
@@ -41,4 +39,3 @@ exclude bad_words
 # execute once, and then exit.
 #
 use_streaming if ENV.key?('USE_STREAMING')
-

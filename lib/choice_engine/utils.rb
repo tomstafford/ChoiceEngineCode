@@ -2,11 +2,10 @@ require 'pry'
 
 module ChoiceEngine
   class Utils
-
     UN1 = "@choiceengine".freeze
     UN2 = "@ChoiceEngine".freeze
     UN3 = "@Choiceengine".freeze
-    USER_NAMES = [ UN1, UN2, UN3 ]
+    USER_NAMES = [UN1, UN2, UN3].freeze
 
     def self.remove_username_from_text(text)
       text = text.dup if text.frozen?
@@ -38,7 +37,7 @@ module ChoiceEngine
       pp "This is the tweeting user id: #{tweeting_user_id} name: #{client.user(tweeting_user_id).name}"
       pp "this is the current followers from this user: #{follower_ids_from_tweeting_user_id}"
       pp "these users: "
-      follower_ids_from_tweeting_user_id.each { |a| pp client.user(a).name}
+      follower_ids_from_tweeting_user_id.each { |a| pp client.user(a).name }
       follower_ids_from_tweeting_user_id.include?(tweeting_user_id)
     end
 

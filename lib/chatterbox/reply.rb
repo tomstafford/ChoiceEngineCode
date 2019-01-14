@@ -1,13 +1,11 @@
 # MONKEY PATCH
 # this block responds to mentions of your bot
 module Chatterbot
-
   #
   # handle checking for mentions of the bot
   module Reply
-
     # handle replies for the bot
-    def replies(&block)
+    def replies(&_block)
       return unless require_login
 
       DatabaseConfig.make_normal_connection

@@ -5,7 +5,6 @@ require 'textacular'
 
 module ChoiceEngine
   class Responder
-
     def initialize(message, username)
       @message = message.strip
       @username = username
@@ -41,7 +40,7 @@ module ChoiceEngine
       end
     end
 
-    private
+  private
 
     def content_url(post)
       "#{@content_base_url}#{post.url}"
@@ -59,9 +58,11 @@ module ChoiceEngine
       end
     end
 
-    def find_next_step_for(abbreviation, current_post_id)
+    # JJ why are we not using current post id?
+    def find_next_step_for(abbreviation, _current_post_id)
       link = Link.fuzzy_search(abbreviation: abbreviation.upcase)
       return unless link.any?
+
       link.first.outgoing_post
     end
   end
