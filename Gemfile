@@ -7,7 +7,7 @@ gem 'activerecord'
 gem 'activesupport'
 gem 'rake'
 gem 'pg'
-gem 'awesome_print'
+
 gem 'dotenv'
 gem 'annotate'
 gem 'railroady'
@@ -15,3 +15,6 @@ gem 'bundler-audit', require: false
 gem 'roo'
 gem 'textacular'
 
+#group :development do
+  gem 'pry-byebug'
+#end
