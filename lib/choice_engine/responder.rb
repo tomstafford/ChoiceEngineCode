@@ -3,6 +3,7 @@ require_relative 'activerecord_models/post'
 require_relative 'activerecord_models/interaction'
 require_relative '../database_config.rb'
 
+# Used by fuzzy search below
 require 'textacular'
 
 module ChoiceEngine
@@ -21,22 +22,12 @@ module ChoiceEngine
         Interaction.where(username: @from_username).delete_all
       end
 
-      new_post = get_post_for_message
+      new_post = new_message_based_on_last_one
 
       response = if new_post
-                   p "New post received, create interaction"
-                   Interaction.create(username: @from_username, post_id: new_post.id)
-                   "#{new_post.description} #{content_url(new_post)} options are: #{new_post.next_options}"
+                   create_interaction_and_get_response(new_post)
                  else
-                   last_post_for_user = Interaction.latest_post_for(@from_username)
-                   if last_post_for_user
-                     p "We have last post for user #{@from_username}, so repeat options"
-                     options = last_post_for_user.next_options
-                     "I didn't understand your message, options are: #{options} - or reply with RESET to start again."
-                   else
-                     p "Bot didn't understand the message '#{@incoming_message}'"
-                     "I didn't understand your message: '#{@incoming_message}' reply with RESET to start again."
-                   end
+                   do_not_understand_this_post
                  end
       p "responding with: #{response}"
       response
@@ -44,11 +35,37 @@ module ChoiceEngine
 
   private
 
+    def do_not_understand_this_post
+      last_post_for_user = Interaction.latest_post_for(@from_username)
+      if last_post_for_user
+        we_have_last_post_but_do_not_understand_this_one(last_post)
+      else
+        no_last_post_and_do_not_understand_this_one
+      end
+    end
+
+    def create_interaction_and_get_response(new_post)
+      p "New post received, create interaction"
+      Interaction.create(username: @from_username, post_id: new_post.id)
+      "#{new_post.description} #{content_url(new_post)} options are: #{new_post.next_options}"
+    end
+
+    def we_have_last_post_but_do_not_understand_this_one
+      p "We have last post for user #{@from_username}, so repeat options"
+      options = last_post_for_user.next_options
+      "I didn't understand your message, options are: #{options} - or reply with RESET to start again."
+    end
+
+    def no_last_post_and_do_not_understand_this_one
+      p "Bot didn't understand the message '#{@incoming_message}'"
+      "I didn't understand your message: '#{@incoming_message}' reply with RESET to start again."
+    end
+
     def content_url(post)
       "#{@content_base_url}#{post.url}"
     end
 
-    def get_post_for_message
+    def new_message_based_on_last_one
       if @incoming_message.upcase.include?('START') || @incoming_message.upcase.include?('RESET')
         Post.where(start: true).sample
       else
