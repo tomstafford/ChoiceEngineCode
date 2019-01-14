@@ -41,7 +41,7 @@ module ChoiceEngine
 
     def self.reply_action
       # Update last since check in case we have no replies, we search for a
-      last_id = client.search("a", since: Time.now - 100).attrs[:search_metadata][:max_id]
+      last_id = client.search("a", since: Date.today.strftime('%Y-%m-%d')).attrs[:search_metadata][:max_id]
       ChoiceEngine::Utils::update_last_id(last_id)
 
       # These replies come from chatterbot, everything in this block gets run per tweet
