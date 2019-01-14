@@ -67,7 +67,7 @@ module ChoiceEngine
       response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).response
 
       # Reply using Twitter API wrapped in chatterbot
-      client.update("@#{tweet.user.screen_name} #{response}", in_reply_to_status_id: tweet.id)
+      pp client.update("@#{tweet.user.screen_name} #{response}", in_reply_to_status_id: tweet.id)
       p 'Reply to tweet'
       p '#' * 80
       p ' ' * 80
