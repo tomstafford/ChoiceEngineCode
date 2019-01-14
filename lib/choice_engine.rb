@@ -83,8 +83,8 @@ module ChoiceEngine
     end
 
     def self.what_to_do_this_time?
-      if ENV['ENVIRONMENT'] == 'development'
-        p "Reply immediately as we are in development mode"
+      if ENV['ENVIRONMENT'] == 'development' || ENV['ENVIRONMENT'] == 'test'
+        p "Reply immediately as we are in development or test mode"
         return :reply
       end
       %i(reply tweet wait wait_again).sample
