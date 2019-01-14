@@ -1,4 +1,3 @@
-require 'pry'
 require_relative '../database_config.rb'
 require_relative 'activerecord_models/last_id.rb'
 
