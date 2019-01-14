@@ -2,13 +2,12 @@ require 'rubygems'
 require 'dotenv'
 
 require_relative 'choice_engine/responder.rb'
-require_relative 'choice_engine/last_id.rb'
 require_relative 'choice_engine/utils.rb'
-require_relative 'database_config.rb'
 
 Dotenv.load('../.env')
 
 require_relative 'chatterbox_config'
+# Overriding chatterboxes reply
 require_relative 'chatterbox/reply.rb'
 
 UPTIME_MESSAGES = [
@@ -41,29 +40,37 @@ module ChoiceEngine
     end
 
     def self.reply_action
-      DatabaseConfig.make_normal_connection
-
-      # Update last since check
+      # Update last since check in case we have no replies, we search for a
       last_id = client.search("a", since: Time.now - 100).attrs[:search_metadata][:max_id]
       ChoiceEngine::Utils::update_last_id(last_id)
 
+      # These replies come from chatterbot, everything in this block gets run per tweet
       replies do |tweet|
         if tweet.user.screen_name == ENV['TWITTER_USER_NAME']
           p "Don't reply to yourself: #{tweet.text}"
         else
-          # We need to check this tweet still exists
-          # We should follow if we don't already
-          pp "We have received Tweet id #{tweet.id} from this user id: #{tweet.user.id}"
-          pp tweet.user
-
-          ChoiceEngine::Utils.follow_if_we_do_not(tweet.user.id)
-
-          text = ChoiceEngine::Utils.remove_username_from_text(tweet.text)
-          response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).respond
-          client.update("@#{tweet.user.screen_name} #{response}", in_reply_to_status_id: tweet.id)
-         # reply "#USER# #{response}", tweet
+          reply_to_tweet(tweet)
         end
       end
+    end
+
+    def self.reply_to_tweet(tweet)
+      # We need to check this tweet still exists
+      # We should follow if we don't already
+      p ' ' * 80
+      p '#' * 80
+      p 'Reply to tweet'
+      pp "We have received Tweet id #{tweet.id} from this user name: #{tweet.user.screen_name}"
+      ChoiceEngine::Utils.follow_if_we_do_not(tweet.user.id)
+
+      text = ChoiceEngine::Utils.remove_username_from_text(tweet.text)
+      response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).response
+
+      # Reply using Twitter API wrapped in chatterbot
+      client.update("@#{tweet.user.screen_name} #{response}", in_reply_to_status_id: tweet.id)
+      p 'Reply to tweet'
+      p '#' * 80
+      pp
     end
 
     def self.tweet_action

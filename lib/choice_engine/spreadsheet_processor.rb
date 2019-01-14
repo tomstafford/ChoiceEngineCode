@@ -1,6 +1,6 @@
 require 'roo'
-require_relative 'post.rb'
-require_relative 'link.rb'
+require_relative 'activerecord_models/post.rb'
+require_relative 'activerecord_models/link.rb'
 
 module ChoiceEngine
   class SpreadsheetProcessor
