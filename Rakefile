@@ -2,15 +2,15 @@ require 'rake/task'
 require 'active_record'
 require_relative 'lib/choice_engine/spreadsheet_processor.rb'
 require_relative 'lib/database_config.rb'
+require_relative 'lib/choice_engine.rb'
 
 task default: %w[run]
 
 task :run do
-  ruby "lib/choice_engine.rb"
+  ChoiceEngine::Runner.run
 end
 
 namespace :db do
-
   desc "Import"
   task :import do
     DatabaseConfig.make_normal_connection
@@ -52,12 +52,11 @@ namespace :g do
     migration_class = name.split("_").map(&:capitalize).join
 
     File.open(path, 'w') do |file|
-      file.write <<-EOF
-class #{migration_class} < ActiveRecord::Migration[5.1]
-  def change
+      file.write <<-RUBY
+  class #{migration_class} < ActiveRecord::Migration[5.1]
+    def change; end
   end
-end
-      EOF
+      RUBY
     end
 
     puts "Migration #{path} created"

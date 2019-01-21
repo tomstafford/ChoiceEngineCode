@@ -4,7 +4,7 @@ module ChoiceEngine
   class Post < ActiveRecord::Base
     has_many :links
 
-    enum importance: [ :high, :medium, :low ]
+    enum importance: %i(high medium low)
 
     def next_options
       links.pluck(:abbreviation).join(', ')

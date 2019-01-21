@@ -1,27 +1,23 @@
-#!/usr/bin/env ruby
 require 'rubygems'
 require 'dotenv'
-require 'awesome_print'
+
 require_relative 'choice_engine/responder.rb'
-require_relative 'choice_engine/last_id.rb'
 require_relative 'choice_engine/utils.rb'
-require_relative 'database_config.rb'
 
 Dotenv.load('../.env')
 
 require_relative 'chatterbox_config'
+# Overriding chatterboxes reply
+require_relative 'chatterbox/reply.rb'
 
-uptime_messages = [
+UPTIME_MESSAGES = [
 "The Choice Engine is an interactive essay about the psychology, neuroscience and philosophy of free will. Follow and reply START to begin.",
 "The Choice Engine is brought to you by: @tomstafford - Words; @J_o_n_C_a_n - Design; @jamesjefferies - Code; A @FestivalMind project.",
 "I don't respond to replies immediately. Sometimes it can take a few hours, but I will get to yours soon. Make sure you are following to ensure you see replies.",
-"There's a chance to ask questions and share your experiences of the project at a panel discussion in the Spiegaltent, Barkers Pool #Sheffield at 4pm on the 25th of September http://festivalofthemind.group.shef.ac.uk/the-choice-engine-talk/",
-"The panel discussion for this project will feature @HelenaIfill, who will give us a Victorian perspective on choice and the mind, and @J_o_n_C_a_n who will take about how a designer thinks about people's choices.",
-"Reply with RESET to clear your history then reply with START to start again.",
+"Reply with RESET to clear your history.",
 "Twitter sometimes hides my replies. Please follow me to ensure you see replies to your messages (if you have 'quality filter' ticked in Settings > Notifications you may not be notified of my replies). More on this here https://tomstafford.github.io/choice-engine-text/teething.",
 "Make sure you are following to ensure you see replies."
-]
-
+].freeze
 
 #<Twitter::SearchResults:0x00007fb09eacd338
  # @attrs=
@@ -31,67 +27,72 @@ uptime_messages = [
  #     :max_id=>1035261852706643968,
 #
 
-# MONKEY PATCH
-# this block responds to mentions of your bot
-module Chatterbot
+module ChoiceEngine
+  class Runner
+    def self.run
+      action = what_to_do_this_time?
 
-  #
-  # handle checking for mentions of the bot
-  module Reply
+      if action == :reply
+        reply_action
+      elsif action == :tweet
+        tweet_action
+      end
+    end
 
-    # handle replies for the bot
-    def replies(&block)
-      return unless require_login
+    def self.reply_action
+      # Update last since check in case we have no replies, we search for a
+      last_id = client.search("a", since: Date.today.strftime('%Y-%m-%d')).attrs[:search_metadata][:max_id]
+      ChoiceEngine::Utils::update_last_id(last_id)
 
-      DatabaseConfig.make_normal_connection
-
-      last_reply_id = ChoiceEngine::LastId.first.last_reply_id
-
-      debug "check for replies since this twitter id - last reply id #{last_reply_id}"
-
-      opts = {}
-      opts[:since_id] = last_reply_id
-      opts[:count] = 200
-
-      results = client.mentions_timeline(opts)
-      @current_tweet = nil
-
-      max_reply_id = last_reply_id
-
-      results.each { |s|
-        if s.id > max_reply_id
-          max_reply_id = s.id
+      # These replies come from chatterbot, everything in this block gets run per tweet
+      replies do |tweet|
+        if tweet.user.screen_name == ENV['TWITTER_USER_NAME']
+          p "Don't reply to yourself: #{tweet.text}"
+        else
+          reply_to_tweet(tweet)
         end
-        @current_tweet = s
-        yield s
-      }
-      ChoiceEngine::LastId.first.update(last_reply_id: max_reply_id)
-      @current_tweet = nil
+      end
     end
-  end
-end
 
-test_value = [1,2,3,4].sample
+    def self.reply_to_tweet(tweet)
+      # We need to check this tweet still exists
+      # We should follow if we don't already
+      p ' ' * 80
+      p '#' * 80
+      p 'Reply to tweet'
+      user_screen_name = tweet.user.screen_name
+      pp "We have received Tweet id #{tweet.id} from this user name: #{user_screen_name}"
+      ChoiceEngine::Utils.follow_if_we_do_not(tweet.user.id)
 
-if test_value == 1
-  DatabaseConfig.make_normal_connection
-
-  # Update last since check
-  last_id = client.search("a", since:Time.now - 100).attrs[:search_metadata][:max_id]
-  ChoiceEngine::LastId.first.update(last_twitter_id: last_id)
-
-  replies do |tweet|
-    if tweet.user.screen_name == 'ChoiceEngine'
-      p "Don't reply to yourself: #{tweet.text}"
-    else
       text = ChoiceEngine::Utils.remove_username_from_text(tweet.text)
-      response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).respond
-      reply "#USER# @#{tweet.user.screen_name} #{response}", tweet
+      response, new_post_id = ChoiceEngine::Responder.new(text, user_screen_name).response
+
+      # Reply using Twitter API wrapped in chatterbot
+      client_response = client.update("@#{user_screen_name} #{response}", in_reply_to_status_id: tweet.id)
+
+      ChoiceEngine::Utils.create_interaction(user_screen_name, new_post_id, client_response.url)
+
+      pp client_response.url
+      p 'Reply to tweet'
+      p '#' * 80
+      p ' ' * 80
+    end
+
+    def self.tweet_action
+      # Uses chatterbot tweet method
+      tweet get_random_tweet_message
+    end
+
+    def self.get_random_tweet_message
+      UPTIME_MESSAGES.sample + " (#{Time.now.utc})"
+    end
+
+    def self.what_to_do_this_time?
+      if ENV['ENVIRONMENT'] == 'development' || ENV['ENVIRONMENT'] == 'test'
+        p "Reply immediately as we are in development or test mode"
+        return :reply
+      end
+      %i(reply tweet wait wait_again).sample
     end
   end
-elsif test_value == 2
-  message = uptime_messages.sample + " (#{Time.now.utc.to_s})"
-  tweet message
 end
-
-

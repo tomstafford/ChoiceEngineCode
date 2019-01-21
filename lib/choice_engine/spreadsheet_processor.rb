@@ -1,17 +1,15 @@
 require 'roo'
-require_relative 'post.rb'
-require_relative 'link.rb'
+require_relative 'activerecord_models/post.rb'
+require_relative 'activerecord_models/link.rb'
 
 module ChoiceEngine
   class SpreadsheetProcessor
+    attr_reader :spreadsheet, :sheets
 
-    attr_accessor :spreadsheet, :sheets
+    SHEETS = %w(Posts Links).freeze
 
-    SPREADSHEET_NAME = ENV['SPREADSHEET_PATH_NAME'] || '/Users/james/Dropbox/ChoiceEngineBackroom/ChoiceEngineGraph.xlsx'
-    SHEETS = ['Posts', 'Links']
-
-    def initialize(spreadsheet = SPREADSHEET_NAME)
-      @spreadsheet = Roo::Excelx.new(SPREADSHEET_NAME)
+    def initialize
+      @spreadsheet = Roo::Excelx.new(ENV['SPREADSHEET_PATH_NAME'])
       @sheets = {}
     end
 
@@ -37,7 +35,6 @@ module ChoiceEngine
     end
 
     def import_links
-
       links.each(post_title: 'PostTitle', abbreviation: 'LinkAbbreviation', outgoing_post_title: 'LinkDestination') do |hash|
         unless hash[:post_title] == 'PostTitle'
           post = Post.find_by(title: hash[:post_title])
@@ -55,10 +52,6 @@ module ChoiceEngine
           end
         end
       end
-    end
-
-    def sheets
-      @sheets
     end
 
     def posts

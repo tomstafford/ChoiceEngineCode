@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_30_151450) do
+ActiveRecord::Schema.define(version: 2018_08_30_151451) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_trgm"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 2018_08_30_151450) do
     t.bigint "post_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "our_tweet_url"
     t.index ["post_id"], name: "index_interactions_on_post_id"
   end
 

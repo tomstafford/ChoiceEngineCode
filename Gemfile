@@ -1,17 +1,22 @@
 source 'https://rubygems.org'
 
-ruby '2.5.1'
+ruby '2.5.3'
 
-gem 'chatterbot'
 gem 'activerecord'
 gem 'activesupport'
-gem 'rake'
-gem 'pg'
-gem 'awesome_print'
-gem 'dotenv'
 gem 'annotate'
+gem 'chatterbot'
+gem 'dotenv'
+gem 'pg'
 gem 'railroady'
-gem 'bundler-audit', require: false
+gem 'rake'
 gem 'roo'
 gem 'textacular'
 
+group :development do
+  gem 'bundler-audit'
+  gem 'fasterer'
+  gem 'govuk-lint'
+  gem 'overcommit'
+  gem 'pry-byebug'
+end
