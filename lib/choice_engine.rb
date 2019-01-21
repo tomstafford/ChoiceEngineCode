@@ -60,14 +60,18 @@ module ChoiceEngine
       p ' ' * 80
       p '#' * 80
       p 'Reply to tweet'
-      pp "We have received Tweet id #{tweet.id} from this user name: #{tweet.user.screen_name}"
+      user_screen_name = tweet.user.screen_name
+      pp "We have received Tweet id #{tweet.id} from this user name: #{user_screen_name}"
       ChoiceEngine::Utils.follow_if_we_do_not(tweet.user.id)
 
       text = ChoiceEngine::Utils.remove_username_from_text(tweet.text)
-      response = ChoiceEngine::Responder.new(text, tweet.user.screen_name).response
+      response, new_post_id = ChoiceEngine::Responder.new(text, user_screen_name).response
 
       # Reply using Twitter API wrapped in chatterbot
-      client_response = client.update("@#{tweet.user.screen_name} #{response}", in_reply_to_status_id: tweet.id)
+      client_response = client.update("@#{user_screen_name} #{response}", in_reply_to_status_id: tweet.id)
+
+      ChoiceEngine::Utils.create_interaction(user_screen_name, new_post_id, client_response.url)
+
       pp client_response.url
       p 'Reply to tweet'
       p '#' * 80

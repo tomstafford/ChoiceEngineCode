@@ -1,9 +1,10 @@
 require_relative '../database_config.rb'
 require_relative 'activerecord_models/last_id.rb'
+require_relative 'activerecord_models/interaction.rb'
 
 module ChoiceEngine
   class Utils
-    UN1 = "@choiceengine".freeze
+    UN1 = "@#{ENV['TWITTER_USER_NAME']}".freeze
     UN2 = "@ChoiceEngine".freeze
     UN3 = "@Choiceengine".freeze
     USER_NAMES = [UN1, UN2, UN3].freeze
@@ -71,6 +72,10 @@ module ChoiceEngine
         pp "We are not following them, so follow them now"
         client.follow(tweeting_user_id)
       end
+    end
+
+    def self.create_interaction(from_username, new_post_id, our_tweet_url)
+      Interaction.create(username: from_username, post_id: new_post_id, our_tweet_url: our_tweet_url)
     end
   end
 end

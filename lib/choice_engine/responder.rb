@@ -23,14 +23,17 @@ module ChoiceEngine
       end
 
       new_post = new_message_based_on_last_one
+      new_post_id = nil
 
       response = if new_post
-                   create_interaction_and_get_response(new_post)
+                   p "New post received, create interaction"
+                   new_post_id = new_post.id
+                   get_response(new_post)
                  else
                    do_not_understand_this_message
                  end
       p "responding with: #{response}"
-      response
+      [response, new_post_id]
     end
 
   private
@@ -44,9 +47,7 @@ module ChoiceEngine
       end
     end
 
-    def create_interaction_and_get_response(new_post)
-      p "New post received, create interaction"
-      Interaction.create(username: @from_username, post_id: new_post.id)
+    def get_response(new_post)
       "#{new_post.description} #{content_url(new_post)} options are: #{new_post.next_options}"
     end
 
@@ -56,9 +57,10 @@ module ChoiceEngine
       "I didn't understand your message, options are: #{options} - or reply with RESET to start again."
     end
 
-    def no_last_response_and_do_not_understand_this_one
+    def no_last_post_and_do_not_understand_this_one
       p "Bot didn't understand the message '#{@incoming_message}'"
-      "I didn't understand your message: '#{@incoming_message}' reply with RESET to start again."
+      text = ChoiceEngine::Utils.remove_username_from_text(@incoming_message)
+      "I didn't understand your message: '#{text}' reply with RESET to start again."
     end
 
     def content_url(post)
