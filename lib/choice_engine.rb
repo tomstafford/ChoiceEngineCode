@@ -10,6 +10,8 @@ require_relative 'chatterbox_config'
 # Overriding chatterboxes reply
 require_relative 'chatterbox/reply.rb'
 
+ARRAY_OF_ACTIONS = %i(tweet wait wait wait wait wait wait wait wait wait wait wait reply reply reply reply reply reply reply reply reply reply reply reply).freeze
+
 UPTIME_MESSAGES = [
 "The Choice Engine is an interactive essay about the psychology, neuroscience and philosophy of free will. Follow and reply START to begin.",
 "The Choice Engine is brought to you by: @tomstafford - Words; @J_o_n_C_a_n - Design; @jamesjefferies - Code; A @FestivalMind project.",
@@ -135,7 +137,7 @@ module ChoiceEngine
         p "Reply immediately as we are in development or test mode"
         return :reply
       end
-      %i(reply tweet wait wait_again).sample
+      ARRAY_OF_ACTIONS.sample
     end
   end
 end
