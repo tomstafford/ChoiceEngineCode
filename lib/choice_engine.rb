@@ -112,12 +112,15 @@ module ChoiceEngine
       text = ChoiceEngine::Utils.remove_username_from_text(tweet.text)
       response, new_post_id = ChoiceEngine::Responder.new(text, user_screen_name).response
 
-      # Reply using Twitter API wrapped in chatterbot
-      client_response = client.update("@#{user_screen_name} #{response}", in_reply_to_status_id: tweet.id)
-
-      ChoiceEngine::Utils.create_interaction(user_screen_name, new_post_id, client_response.url)
-
-      pp client_response.url
+      if response
+        # Reply using Twitter API wrapped in chatterbot
+        client_response = client.update("@#{user_screen_name} #{response}", in_reply_to_status_id: tweet.id)
+        # pp client_response.url
+        pp client_response.inspect
+        ChoiceEngine::Utils.create_interaction(user_screen_name, new_post_id, client_response.url)
+      else
+        p "Not responding, didn't understand #{tweet.text}"
+      end
       p 'Reply to tweet'
       p '#' * 80
       p ' ' * 80
