@@ -61,6 +61,7 @@ UPTIME_MESSAGES = [
 "Fabienne Serrière makes computational knitwear https://twitter.com/knityak",
 "Greene & Cohen (2004). For the law, neuroscience changes nothing and everything. https://www.ncbi.nlm.nih.gov/pmc/articles/PMC1693457/",
 "For argument's sake: evidence that reason can change minds https://www.amazon.co.uk/arguments-sake-evidence-reason-change-ebook/dp/B010O1Z018",
+"NEW RESEARCH: For whom does determinism undermine moral responsibility? Surveying the conditions for free will across cultures https://psyarxiv.com/j248d/",
 "Video: Great Golden Digger Wasp burying a paralyzed grasshopper https://www.youtube.com/watch?v=5t2p4ukzL74"
 ].freeze
 
