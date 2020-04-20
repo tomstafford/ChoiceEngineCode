@@ -13,10 +13,13 @@ require_relative 'chatterbox/reply.rb'
 ARRAY_OF_ACTIONS = %i(tweet wait wait wait wait wait wait wait wait wait wait wait reply reply reply reply reply reply reply reply reply reply reply reply).freeze
 
 UPTIME_MESSAGES = [
+"PAPER: The perspectival shift: how experiments on unconscious processing don’t justify the claims made for them. (Stafford, 2014) https://www.frontiersin.org/articles/10.3389/fpsyg.2014.01067/full",
+"VIDEO: My Brain Made Me Do It: Neuroscience and Free Will (Sheffield Salon, 2013) https://www.youtube.com/watch?v=dPOP-aglwtM",
+"RADIO:In Our Time on Free Will (Originally broadcast 4 March 2011) https://www.bbc.co.uk/programmes/b00z5y9z",
+"Free Will Is Real. Philosopher Christian List argues against reductionism and determinism in accounts of the mind (Scientific American) https://blogs.scientificamerican.com/cross-check/free-will-is-real/",
 "The Choice Engine is an interactive essay about the psychology, neuroscience and philosophy of free will. Follow and reply START to begin.",
 "The Choice Engine is brought to you by: @tomstafford - Words; @J_o_n_C_a_n - Design; @jamesjefferies - Code; A @FestivalMind project.",
 "I don't respond to replies immediately. Sometimes it can take a few hours, but I will get to yours soon. Make sure you are following to ensure you see replies.",
-"Reply with RESET to clear your history",
 "Twitter sometimes hides my replies. Please follow me to ensure you see replies to your messages (if you have 'quality filter' ticked in Settings > Notifications you may not be notified of my replies). More on this here https://tomstafford.github.io/choice-engine-text/teething.",
 "Make sure you are following to ensure you see replies.",
 "'I cannot persuade myself that a beneficent & omnipotent God would have designedly created the Ichneumonidae with the express intention of their feeding within ... living bodies': Charles Darwin https://www.asa3.org/ASA/PSCF/2001/PSCF9-01Miles.html",

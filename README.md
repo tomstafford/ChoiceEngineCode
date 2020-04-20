@@ -18,3 +18,7 @@ rake db:import # To pull in spreadsheet
 
 Try again with a New twitter account which already follows
 Do they both get responses?
+
+### Test environment
+
+notes are in 1password
