@@ -20,3 +20,8 @@ group :development do
   gem 'overcommit'
   gem 'pry-byebug'
 end
+
+group :test do
+  gem 'database_cleaner'
+  gem 'rspec'
+end
