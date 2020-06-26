@@ -32,11 +32,13 @@ module Chatterbot
           max_reply_id = s.id
         end
         @current_tweet = s
+
         yield s
+
+        pp "Update last reply id with that last reply id #{max_reply_id}"
+        ChoiceEngine::LastId.first.update(last_reply_id: max_reply_id)
       end
 
-      pp 'Update last reply id with that last reply id'
-      ChoiceEngine::LastId.first.update(last_reply_id: max_reply_id)
       p '#' * 80
       pp
       @current_tweet = nil
