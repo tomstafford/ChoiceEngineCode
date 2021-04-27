@@ -1,11 +1,12 @@
 source 'https://rubygems.org'
 
-ruby '2.6.6'
+ruby '2.7.3'
 
 gem 'activerecord'
 gem 'activesupport'
 gem 'annotate'
-gem 'chatterbot'
+gem 'chatterbot', git: 'https://github.com/jamesjefferies/chatterbot.git', branch: 'jamesjefferies/update-oauth-dependency'
+
 gem 'dotenv'
 gem 'pg'
 gem 'railroady'
