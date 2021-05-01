@@ -178,7 +178,7 @@ DEPENDENCIES
   textacular
 
 RUBY VERSION
-   ruby 2.7.3p183
+   ruby 2.7.2p137
 
 BUNDLED WITH
    1.17.3
