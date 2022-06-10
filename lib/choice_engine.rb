@@ -99,6 +99,7 @@ module ChoiceEngine
         if tweet.user.screen_name == ENV['TWITTER_USER_NAME']
           p "Don't reply to yourself: #{tweet.text}"
         else
+          sleep rand(10) # to avoid busting rate limit
           reply_to_tweet(tweet)
         end
       end
