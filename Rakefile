@@ -10,6 +10,10 @@ task :run do
   ChoiceEngine::Runner.run
 end
 
+task :reply do
+  ChoiceEngine::Runner.reply_action
+end
+
 namespace :db do
   desc "Import"
   task :import do
